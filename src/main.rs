@@ -30,7 +30,7 @@ async fn main() {
                 let xn = zoom * x_pos as f64 / width;
                 let yn = zoom * y_pos as f64 / height;
                 let d = min(1.,((xn as f32).powf(2.)+(yn as f32).powf(2.))/(2. as f32).sqrt()) * island_value;
-                let val = perlin.get([xn, yn]) + ((1.-d)/2.) as f64 + 0.25 * secondary_perlin.get([xn*4., yn*4.]) + ((1.-d)/2.) as f64;
+                let val = (perlin.get([xn, yn]) + ((1.-d)/2.) as f64 + 0.25 * secondary_perlin.get([xn*4., yn*4.])).powf(0.9) + ((1.-d)/2.) as f64;
                 if val > 0.7 {
                     draw_rectangle(x as f32, y as f32, 1., 1., LIGHTGRAY);
                 } else if val > 0.2 {
