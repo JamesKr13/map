@@ -22,7 +22,7 @@ async fn main() {
     let island_value = 4.;
     loop {
         clear_background(BLUE);
-        key_presses(&mut perlin, &mut base_x, &mut base_y, &mut zoom);
+        key_presses(&mut perlin, &mut secondary_perlin, &mut base_x, &mut base_y, &mut zoom);
         let (width, height) = (screen_width() as f64, screen_height() as f64);
         for x in 0..(width.round() as i32) {
             for y in 0..(height.round() as i32) {
@@ -44,9 +44,10 @@ async fn main() {
     }
 }
 
-fn key_presses(perlin: &mut Perlin, base_x: &mut i32, base_y: &mut i32, zoom: &mut f64) {
+fn key_presses(perlin: &mut Perlin, secondary_perlin: &mut Perlin, base_x: &mut i32, base_y: &mut i32, zoom: &mut f64) {
     if is_key_pressed(KeyCode::Space) {
         *perlin = Perlin::new((0..1000).choose(&mut thread_rng()).unwrap());
+        *secondary_perlin = Perlin::new((0..1000).choose(&mut thread_rng()).unwrap());
     }
     if is_key_down(KeyCode::W) || is_key_down(KeyCode::Up) {
         *base_y -= 10;
