@@ -16,8 +16,10 @@ fn abs(num: f32) -> f32 {
 #[macroquad::main("map")]
 async fn main() {
     let mut perlin = Perlin::new((0..1000).choose(&mut thread_rng()).unwrap());
+    let mut secondary_perlin = Perlin::new((0..1000).choose(&mut thread_rng()).unwrap());
     let (mut base_x, mut base_y) = (0, 0);
     let mut zoom = 5.;
+    let island_value = 4.;
     loop {
         clear_background(BLUE);
         key_presses(&mut perlin, &mut base_x, &mut base_y, &mut zoom);
@@ -27,8 +29,8 @@ async fn main() {
                 let (x_pos, y_pos) = (x + base_x, y + base_y);
                 let xn = zoom * x_pos as f64 / width;
                 let yn = zoom * y_pos as f64 / height;
-                let d = min(1.,((xn as f32).powf(2.)+(yn as f32).powf(2.))/(2. as f32).sqrt()) * 4.;
-                let val = perlin.get([xn, yn]) + ((1.-d)/2.) as f64;
+                let d = min(1.,((xn as f32).powf(2.)+(yn as f32).powf(2.))/(2. as f32).sqrt()) * island_value;
+                let val = perlin.get([xn, yn]) + ((1.-d)/2.) as f64 + 0.25 * secondary_perlin.get([xn*4., yn*4.]) + ((1.-d)/2.) as f64;
                 if val > 0.7 {
                     draw_rectangle(x as f32, y as f32, 1., 1., LIGHTGRAY);
                 } else if val > 0.2 {
